@@ -1,18 +1,24 @@
 import { window } from '@kit.ArkUI'
 
-class StatusBar {
-  setDarkBar () {
-    this.setBar({
+export  class StatusBar {
+  static setDarkBar () {
+    StatusBar.setBar({
       statusBarContentColor: '#FFFFFF'
     })
   }
-  setLightBar() {
-    this.setBar({
+  static setLightBar() {
+    StatusBar.setBar({
       statusBarContentColor: '#000000'
     })
   }
-  async setBar(config: window.SystemBarProperties) {
+  static async setBar(config: window.SystemBarProperties) {
     let win = await window.getLastWindow(getContext())
-    await win.setWindowSystemBarProperties(config)
+    win.setWindowSystemBarProperties(config)
+  }
+
+  static async setHidBar() {
+    let win = await window.getLastWindow(getContext())
+    win.setSpecificSystemBarEnabled("status", false)
+    win.setSpecificSystemBarEnabled("navigationIndicator", false)
   }
 }
