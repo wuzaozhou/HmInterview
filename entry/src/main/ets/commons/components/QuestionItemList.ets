@@ -1,7 +1,10 @@
-import { PageData, QuestionItem, QuestionListParams, SortType } from "../../models"
+import { PageData, QuestionItem, QuestionListParams, QuestionPageParams, SortType } from "../../models"
 import { http } from "../utils/Http"
 import { QuestionItemComp } from "./QuestionItemComp"
 import { promptAction } from "@kit.ArkUI"
+import { QuestionItemSkeleton } from "./QuestionItemListSkeleton"
+import { navPathStack } from "../utils/navPathStack"
+import { Auth } from "../utils/Auth"
 
 enum ListLoadMoreState {
   none,// 普通状态
@@ -12,14 +15,26 @@ enum ListLoadMoreState {
 
 @ComponentV2
 export struct QuestionItemList {
-
+  @Local private showSkeleton: boolean = true
   @Local private refreshing: boolean = true
   @Local private moreState: ListLoadMoreState = ListLoadMoreState.none
-  @Local private sort: SortType = SortType.Default
+
   @Local private page: number = 1
   @Local private list: QuestionItem[] = []
 
+  @Param keyword: string = ""
   @Require @Param typeId: number
+  @Param sort: SortType = SortType.Default
+  @Param index: number = 0
+  @Param activeIndex: number = 0
+
+  @Monitor("sort", "activeIndex", "keyword") sortChange() {
+    if (this.activeIndex != this.index) {
+      return
+    }
+    this.refreshing = true
+  }
+
 
   @Computed
   get loadText() {
@@ -30,7 +45,7 @@ export struct QuestionItemList {
     }else if (this.moreState === ListLoadMoreState.failure) {
       return "数据加载失败"
     }else {
-      return "上拉加载更多"
+      return ""
     }
   }
 
@@ -56,28 +71,37 @@ export struct QuestionItemList {
       this.moreState === ListLoadMoreState.noData || this.list.length == 0) {
       return
     }
-    this.moreState = ListLoadMoreState.loading
-    const res = await this.getQuestionList()
-    this.list.push(...res.rows)
-    if (this.page >= res.pageTotal) {
-      this.moreState = ListLoadMoreState.noData
-    } else {
+    try {
+      this.moreState = ListLoadMoreState.loading
+      const res = await this.getQuestionList()
+      this.list.push(...res.rows)
+      if (this.page >= res.pageTotal) {
+        this.moreState = ListLoadMoreState.noData
+      } else {
+        this.moreState = ListLoadMoreState.none
+        this.page++
+      }
+    } catch (e) {
       this.moreState = ListLoadMoreState.none
-      this.page++
     }
   }
 
   async onRefresh() {
-    this.moreState = ListLoadMoreState.none
-    this.page = 1
-    const res = await this.getQuestionList()
-    this.list = res.rows
-    this.refreshing = false
-    if (this.page >= res.pageTotal) {
-      this.moreState = ListLoadMoreState.noData
-    } else {
+    try {
       this.moreState = ListLoadMoreState.none
-      this.page++
+      this.page = 1
+      const res = await this.getQuestionList()
+      this.showSkeleton = false
+      this.list = res.rows
+      this.refreshing = false
+      if (this.page >= res.pageTotal) {
+        this.moreState = ListLoadMoreState.noData
+      } else {
+        this.moreState = ListLoadMoreState.none
+        this.page++
+      }
+    } catch (e) {
+      this.refreshing = false
     }
   }
 
@@ -89,7 +113,8 @@ export struct QuestionItemList {
         questionBankType: 10,
         sort: this.sort,
         page: this.page,
-        pageSize: 10
+        pageSize: 10,
+        keyword: this.keyword
       } as QuestionListParams
     })
   }
@@ -97,20 +122,41 @@ export struct QuestionItemList {
 
   build() {
     Refresh( {refreshing: $$this.refreshing}) {
-      List() {
-        ForEach(this.list, (item: QuestionItem, index: number) => {
-          ListItem() {
-            QuestionItemComp({item: item})
-          }
+      if (this.showSkeleton) {
+        QuestionItemSkeleton()
+      }else {
+        List() {
+          ForEach(this.list, (item: QuestionItem, index: number) => {
+            ListItem() {
+              QuestionItemComp({item: item})
+                .onClick(() => {
+                  navPathStack.pushPath({
+                    name: 'QuestionPage',
+                    param: {
+                      item: item,
+                      list: this.list
+                    } as QuestionPageParams
+                  })
+//                  Auth.checkAuth({
+//                    name: 'QuestionPage',
+//                    param: {item} as QuestionPageParams
+//                  } as NavPathInfo)
+                })
+            }
+          })
+          this.loadMoreBuilder()
+        }
+
+        .onReachEnd(() => {
+          this.onLoad()
         })
-        this.loadMoreBuilder()
+        .width('100%')
+        .height('100%')
       }
-      .onReachEnd(() => {
-        this.onLoad()
-      })
     }
     .onRefreshing( () => {
       this.onRefresh()
     })
+    .backgroundColor($r('app.color.white'))
   }
 }

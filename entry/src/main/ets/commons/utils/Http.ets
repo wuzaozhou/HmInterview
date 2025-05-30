@@ -1,14 +1,29 @@
 /**
  * Http 请求工具，基于 axios 封装
  */
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from '@ohos/axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from '@ohos/axios'
+import { User } from '../../models'
+import { Auth } from './Auth'
 import { logger } from './Logger'
+import { promptAction } from '@kit.ArkUI'
+import { navPathStack } from './navPathStack'
 
 export const baseURL = 'https://api-harmony-teach.itheima.net/hm/'
 
 export const instance = axios.create({
   baseURL,
   timeout: 100000
+})
+
+// 请求拦截器
+instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const user = Auth.getUser()
+  if (user.token) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  return config
+}, (err: AxiosError) => {
+  return Promise.reject(err)
 })
 
 // 响应拦截器
@@ -21,6 +36,19 @@ instance.interceptors.response.use((res: AxiosResponse) => {
   return Promise.reject(res.data)
 }, (err: AxiosError) => {
   logger.error('Req Error', JSON.stringify(err))
+
+  if (err.response?.status === 401) {
+    Auth.setUser({} as User)
+    promptAction.showToast({message: "登录状态已失效！！"})
+    navPathStack.pushPath( {
+      name: 'LoginPage'
+    }, {
+      launchMode: LaunchMode.MOVE_TO_TOP_SINGLETON// 保证同时只有一个登录页面
+      // 如果存在，将已存在的页面移到栈顶
+      // 如果不存在，创建并跳转
+    })
+  }
+
   return Promise.reject(err)
 })
 

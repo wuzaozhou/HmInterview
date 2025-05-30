@@ -1,0 +1,30 @@
+{
+  "routerMap" : [
+    {
+      "name": "LoginPage",
+      "pageSourceFile": "src/main/ets/pages/Login/LoginPage.ets",
+      "buildFunction": "LoginBuilder"
+    },
+    {
+      "name": "QuestionPage",
+      "pageSourceFile": "src/main/ets/pages/Question/QuestionPage.ets",
+      "buildFunction": "QuestionBuilder"
+    },
+    {
+      "name": "WebPage",
+      "pageSourceFile": "src/main/ets/pages/Web/WebPage.ets",
+      "buildFunction": "WebBuilder"
+    },
+    {
+      "name": "SearchPage",
+      "pageSourceFile": "src/main/ets/pages/Search/SearchPage.ets",
+      "buildFunction": "SearchBuilder"
+    },
+    {
+      "name": "ClockInPage",
+      "pageSourceFile": "src/main/ets/pages/ClockIn/ClockInPage.ets",
+      "buildFunction": "ClockInBuilder"
+    }
+
+  ]
+}

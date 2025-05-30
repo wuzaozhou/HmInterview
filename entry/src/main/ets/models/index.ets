@@ -1,3 +1,4 @@
+import { Type } from "@kit.ArkUI"
 
 export interface TabItem {
   icon: Resource
@@ -47,4 +48,83 @@ export interface QuestionListParams {
   sort?: SortType
   page?: number
   pageSize?: number
+  keyword?: string
 }
+
+@ObservedV2
+export class User {
+  @Trace id: string = ""
+  @Trace username: string = ""
+  @Trace avatar: string = ""
+  @Trace token: string = ""
+  @Trace nickName?: string = ""
+  // 学习时长
+  @Trace totalTime?: number = 0
+  // 打卡次数
+  @Trace clockinNumbers?: number = 0
+}
+
+export interface  LoginParams {
+  username: string
+  password: string
+}
+@ObservedV2
+export class AppUser {
+  @Type(User)
+  @Trace user: User = new User()
+
+}
+
+
+export interface WebPageParam {
+  title: string,
+  src: string
+}
+
+export interface QuestionDetail extends QuestionItem {
+  /* 答案 */
+  answer: string;
+  /* 是否收藏 */
+  collectFlag: 0 | 1;
+  /* 是否点赞 */
+  likeFlag: 0 | 1;
+  /* 所属模块 */
+  stage: string[];
+}
+
+export interface QuestionPageParams {
+  item: QuestionItem;
+  list: QuestionItem[];
+}
+
+export interface QuestionOptParams {
+  id: string;
+  /* 0 试题  2 面经 */
+  type: 0 | 1;
+  /* 1 点赞  2 收藏 */
+  optType: 1 | 2;
+}
+
+export interface TimeItem {
+  questionId: string;
+  startTime: number;
+  endTime: number;
+}
+
+export interface ClockInItem {
+  id: string,
+  createdAt: string
+}
+
+export interface ClockInfo {
+  flag: boolean
+  clockinNumbers: number
+  totalClockinNumber: number
+  clockins: ClockInItem[]
+}
+
+export interface ClockInfoParams {
+  year: string,
+  month: string
+}
+

@@ -11,6 +11,14 @@
     {
       "name": "EntryAbility_label",
       "value": "面试通"
+    },
+    {
+      "name": "permission_write_media_reason",
+      "value": "保存图片"
+    },
+    {
+      "name": "permission_read_media_reason",
+      "value": "读取图片"
     }
   ]
 }

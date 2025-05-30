@@ -7,6 +7,8 @@ import { HomePage } from './Home/HomePage';
 import { ProjectPage } from './Project/ProjectPage';
 import { InterViewPage } from './InterView/InterViewPage';
 import { MinePage } from './Mine/MinePage';
+import { navPathStack } from '../commons/utils/navPathStack';
+
 
 @Entry
 @ComponentV2
@@ -49,33 +51,36 @@ struct Index {
   }
 
   build() {
-    Column() {
-      Tabs({index: $$this.activeIndex}) {
-        ForEach(this.tabList, (item: TabItem, index: number) => {
-          TabContent() {
-            if (index === 0) {
-              HomePage()
-            }else if (index === 1){
-              ProjectPage()
-            }else if (index === 2) {
-              InterViewPage()
-            }else {
-              MinePage()
+    Navigation(navPathStack) {
+      Column() {
+        Tabs({index: $$this.activeIndex}) {
+          ForEach(this.tabList, (item: TabItem, index: number) => {
+            TabContent() {
+              if (index === 0) {
+                HomePage()
+              }else if (index === 1){
+                ProjectPage()
+              }else if (index === 2) {
+                InterViewPage()
+              }else {
+                MinePage()
+              }
             }
-          }
-          .tabBar(this.TabBarBuilder(item, index))
+            .tabBar(this.TabBarBuilder(item, index))
+          })
+        }
+        .divider({strokeWidth: 0.5, color:$r('app.color.common_gray_border')})
+        .barPosition(BarPosition.End)
+        .scrollable(false)// 关闭横向的滑动
+        .animationDuration(0)// 关闭切换动画
+        .margin({
+          bottom: this.areaHeight.bottomHeight
         })
       }
-      .divider({strokeWidth: 0.5, color:$r('app.color.common_gray_border')})
-      .barPosition(BarPosition.End)
-      .scrollable(false)// 关闭横向的滑动
-      .animationDuration(0)// 关闭切换动画
-      .margin({
-        bottom: this.areaHeight.bottomHeight
-      })
+      .width('100%')
+      .height('100%')
+      .backgroundColor($r('app.color.white'))
     }
-    .width('100%')
-    .height('100%')
-    .backgroundColor($r('app.color.white'))
+    .hideTitleBar(true)
   }
 }
