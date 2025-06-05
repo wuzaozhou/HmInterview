@@ -8,7 +8,9 @@ import { ProjectPage } from './Project/ProjectPage';
 import { InterViewPage } from './InterView/InterViewPage';
 import { MinePage } from './Mine/MinePage';
 import { navPathStack } from '../commons/utils/navPathStack';
+import { Theme } from '../commons/utils/Theme';
 
+Theme.initTheme()
 
 @Entry
 @ComponentV2

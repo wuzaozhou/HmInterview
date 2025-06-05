@@ -70,7 +70,7 @@ export interface  LoginParams {
 }
 @ObservedV2
 export class AppUser {
-  @Type(User)
+  @Type(User) // 对于复杂对象需要@Type 修饰，确保序列化成功
   @Trace user: User = new User()
 
 }
@@ -127,4 +127,32 @@ export interface ClockInfoParams {
   year: string,
   month: string
 }
+
+// 学习时间
+
+export interface StudyTimeItem {
+  id: string
+  name: string
+  total: number
+  done: number
+  undone: number
+}
+
+export interface StudyTimeCate {
+  type: string,
+  list: StudyTimeItem[]
+}
+
+export interface StudyTimeData {
+  totalTime: number,
+  studyData: StudyTimeCate[]
+}
+
+
+export interface WordItem {
+  zh: string
+  en: string
+  code: string
+}
+
 

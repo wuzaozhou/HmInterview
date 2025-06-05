@@ -4,14 +4,14 @@ import { logger } from "./Logger";
 import preferences from "@ohos.data.preferences";
 
 class Tracking {
-
+// 首选项
   store: preferences.Preferences | null = null
 
   dataKey: string = "TrackingKey"
 
   getStore() {
     if (!this.store) {
-      const context = AppStorage.get<Context>("context");
+      const context = getContext();
       const dataPreferences = preferences.getPreferencesSync(context, { name: "tracking-store" });
       this.store = dataPreferences;
     }

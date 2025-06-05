@@ -16,3 +16,6 @@ export const formatTime = (second: number = 0) => {
     return (second / min).toFixed(0) + '分钟'
   }
 }
+export const calcPercentage = (done: number, total: number) => {
+  return Math.round(done / total * 100) + '%'
+}

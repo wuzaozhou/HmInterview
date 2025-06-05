@@ -24,6 +24,36 @@
       "name": "ClockInPage",
       "pageSourceFile": "src/main/ets/pages/ClockIn/ClockInPage.ets",
       "buildFunction": "ClockInBuilder"
+    },
+    {
+      "name": "StudyTimePage",
+      "pageSourceFile": "src/main/ets/pages/Mine/StudyTimePage.ets",
+      "buildFunction": "StudyTimeBuilder"
+    },
+    {
+      "name": "WordPage",
+      "pageSourceFile": "src/main/ets/pages/Mine/WordPage.ets",
+      "buildFunction": "WordBuilder"
+    },
+    {
+      "name": "AudioPage",
+      "pageSourceFile": "src/main/ets/pages/Audio/AudioPage.ets",
+      "buildFunction": "AudioBuilder"
+    },
+    {
+      "name": "AIPage",
+      "pageSourceFile": "src/main/ets/pages/AI/AIPage.ets",
+      "buildFunction": "AIBuilder"
+    },
+    {
+      "name": "SettingPage",
+      "pageSourceFile": "src/main/ets/pages/setting/SettingPage.ets",
+      "buildFunction": "SettingBuilder"
+    },
+    {
+      "name": "ProfilePage",
+      "pageSourceFile": "src/main/ets/pages/setting/Profile/ProfilePage.ets",
+      "buildFunction": "ProfileBuilder"
     }
 
   ]

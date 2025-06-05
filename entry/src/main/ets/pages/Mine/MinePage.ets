@@ -159,7 +159,9 @@ export struct MinePage {
           name: '累计学时',
           other: formatTime(this.user.totalTime),
           onClick: () => {
-            // TODO
+            Auth.checkAuth({
+              name: 'StudyTimePage'
+            })
           }
         })
       }
@@ -170,28 +172,41 @@ export struct MinePage {
       Column() {
         this.toolsBuilder({
           icon: $r('app.media.ic_mine_notes'), name: '开发常用词', onClick: () => {
-            // TODO
+            Auth.checkAuth({
+              name: "WordPage"
+            })
           }
         })
-        this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通AI' })
-        this.toolsBuilder({ icon: $r('app.media.ic_mine_invite'), name: '推荐分享' })
+        this.toolsBuilder({
+          icon: $r('app.media.ic_mine_ai'),
+          name: '面通AI',
+          onClick: () => {
+            Auth.checkAuth({
+              name: 'AIPage'
+            })
+          }
+        })
+        this.toolsBuilder({
+          icon: $r('app.media.ic_mine_invite'),
+          name: '面试录音',
+          onClick: () => {
+            Auth.checkAuth({
+              name: 'AudioPage'
+            })
+          }
+        })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_file'), name: '意见反馈' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_info'), name: '关于我们' })
         this.toolsBuilder({
           icon: $r('app.media.ic_mine_setting'), name: '设置', onClick: () => {
-            // TODO
+            navPathStack.pushPath({
+              name: 'SettingPage'
+            })
           }
         })
       }
       .backgroundColor($r('app.color.white'))
       .borderRadius(8)
-
-      Button("退出登录")
-        .width('100%')
-        .height(40)
-        .onClick(() => {
-          Auth.setUser(new User())
-        })
 
     }
     .padding(16)
